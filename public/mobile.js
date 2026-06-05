@@ -142,11 +142,43 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    socket.on('activity-complete', () => {
-      gameplaySection.classList.add('hidden');
-      completeSection.classList.remove('hidden');
-      myContributionsVal.textContent = piecesPlacedCount;
-    });
+    socket.on('activity-complete', (data) => {
+  gameplaySection.classList.add('hidden');
+  completeSection.classList.remove('hidden');
+
+  myContributionsVal.textContent = piecesPlacedCount;
+
+  const winnerBox = document.getElementById('winnerName');
+  const pointsBox = document.getElementById('pointsEarned');
+  const rankBox = document.getElementById('myRank');
+  const topPlayersBox = document.getElementById('topPlayers');
+
+  if (data.leaderboard && data.leaderboard.length > 0) {
+
+    winnerBox.textContent =
+      `🏆 Winner: ${data.leaderboard[0].displayName}`;
+
+    const myIndex = data.leaderboard.findIndex(
+      p => p.displayName.toLowerCase() === myDisplayName.toLowerCase()
+    );
+
+    if (myIndex !== -1) {
+      rankBox.textContent = `🏅 Rank: #${myIndex + 1}`;
+
+      pointsBox.textContent =
+        `⭐ Points Earned: ${data.leaderboard[myIndex].score}`;
+    }
+
+    topPlayersBox.innerHTML =
+      '<h3>🏆 Leaderboard</h3>' +
+      data.leaderboard.slice(0, 3).map((p, i) => `
+        <div style="margin:6px 0;">
+          ${i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}
+          ${p.displayName} - ${p.score}
+        </div>
+      `).join('');
+  }
+});
 
     socket.on('host-disconnected', () => {
       alert('Event Big Screen disconnected. Returning to entry screen.');

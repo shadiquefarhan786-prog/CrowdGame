@@ -78,19 +78,49 @@
     </div>
 
     <!-- Real-time activity ticker -->
-    <div class="activity-ticker" id="activityTicker">
-      SYSTEM ONLINE — Solvers ready
-    </div>
+    <!-- Live Leaderboard -->
+<div id="liveLeaderboard"
+     style="
+      position:absolute;
+      top:120px;
+      right:20px;
+      width:260px;
+      background:rgba(0,0,0,0.75);
+      border:2px solid gold;
+      border-radius:12px;
+      padding:15px;
+      color:white;
+      z-index:999;
+     ">
+  <h3>🏆 LIVE LEADERBOARD</h3>
+  <div id="liveLeaderboardList"></div>
+</div>
+
+<!-- Real-time activity ticker -->
+<div class="activity-ticker" id="activityTicker">
+  SYSTEM ONLINE — Solvers ready
+</div>
   </div>
 
   <!-- 3. GAME OVER / COMPLETED SCREEN -->
   <div id="completionScreen" class="screen-panel hidden">
     <div class="completion-banner">
-      <h1 class="bounce-in">PUZZLE SOLVED</h1>
-      <p class="sub-banner">OUTSTANDING COMMUNITY COORDINATION</p>
-    </div>
+  <h1 class="bounce-in">PUZZLE SOLVED</h1>
+  <p class="sub-banner">OUTSTANDING COMMUNITY COORDINATION</p>
+</div>
 
-    <div class="completion-content">
+<div id="winnerDisplay"
+     style="
+       text-align:center;
+       font-size:48px;
+       color:gold;
+       font-weight:bold;
+       margin-bottom:25px;
+       text-shadow:0 0 20px gold;
+     ">
+</div>
+
+<div class="completion-content">
       <div class="leaderboard-card">
         <h2>🏆 TOP SOLVERS</h2>
         <div class="leaderboard-list" id="leaderboardList">

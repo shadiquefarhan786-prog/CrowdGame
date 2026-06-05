@@ -231,17 +231,47 @@ class JigsawActivity extends BaseActivity {
       
       this.piecesPlaced++;
       
-      // Update participant score
-      player.score += 100; // 100 points for correct placement
-      
-      // Assign a new piece to the player
-      this.assignPiecesToPlayer(player.id);
-      
-      // Check if puzzle is fully solved
-      const isSolved = this.piecesPlaced === this.totalPieces;
-      if (isSolved) {
-        this.onEnd();
-      }
+     // Update participant score
+player.score += 100; // 100 points for correct placement
+
+const room = this.roomManager.getRoom(this.roomCode);
+
+const leaderboard = Array.from(room.participants.values())
+  .sort((a, b) => b.score - a.score)
+  .map(p => ({
+    id: p.id,
+    displayName: p.displayName,
+    score: p.score,
+    color: p.color
+  }));
+
+this.roomManager.io.to(room.hostSocketId).emit(
+  'leaderboard-update',
+  leaderboard
+);
+
+// Assign a new piece to the player
+this.assignPiecesToPlayer(player.id);
+
+// Check if puzzle is fully solved
+const isSolved = this.piecesPlaced === this.totalPieces;
+
+if (isSolved) {
+  const room = this.roomManager.getRoom(this.roomCode);
+
+  const leaderboard = Array.from(room.participants.values())
+    .sort((a, b) => b.score - a.score);
+
+  this.roomManager.io.to(room.hostSocketId).emit(
+    'activity-complete',
+    {
+      leaderboard,
+      totalPieces: this.totalPieces
+    }
+  );
+
+  this.onEnd();
+}
 
       return {
         success: true,

@@ -101,10 +101,35 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('activity-complete', (data) => {
-      consoleLogMsg(`🏆 PUZZLE SOLVED COMPLETED!`);
-      activeRoomStatusDisp.textContent = 'COMPLETED';
-      activeRoomStatusDisp.className = 'value status-badge completed';
-    });
+  consoleLogMsg(`🏆 PUZZLE SOLVED COMPLETED!`);
+
+  activeRoomStatusDisp.textContent = 'COMPLETED';
+  activeRoomStatusDisp.className = 'value status-badge completed';
+
+  if (data.leaderboard && data.leaderboard.length > 0) {
+    const winner = data.leaderboard[0];
+
+    alert(
+      `🏆 WINNER\n\nName: ${winner.displayName}\nScore: ${winner.score}`
+    );
+
+    consoleLogMsg(
+      `🏆 WINNER: ${winner.displayName} (${winner.score} points)`
+    );
+
+    const banner = document.getElementById('winnerBanner');
+
+    if (banner) {
+      banner.style.display = 'block';
+
+      banner.innerHTML = `
+        🏆 CHAMPION<br><br>
+        ${winner.displayName}<br><br>
+        ⭐ ${winner.score} Points
+      `;
+    }
+  }
+});
 
     socket.on('error-message', (msg) => {
       consoleLogMsg(`[ERROR] ${msg}`);

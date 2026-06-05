@@ -190,6 +190,9 @@ function setupConnection() {
   socket.on('player-left', (player) => {
     removePlayerFromLobbyGrid(player.id);
   });
+  socket.on('leaderboard-update', (leaderboard) => {
+  updateLiveLeaderboard(leaderboard);
+});
 
   socket.on('room-update', (data) => {
     document.getElementById('playerCount').textContent = data.participantsCount;
@@ -243,8 +246,12 @@ function setupConnection() {
 
   // Event: Puzzle solved!
   socket.on('activity-complete', (data) => {
-    triggerPuzzleCompletion(data);
-  });
+  triggerPuzzleCompletion(data);
+
+  alert(
+    `🏆 Winner: ${data.leaderboard[0].displayName}\nScore: ${data.leaderboard[0].score}`
+  );
+});
 }
 
 // 3. LOBBY UTILITIES
@@ -437,6 +444,16 @@ function preCachePieceImages(pieces) {
 // 5. SOLVED CELEBRATION
 function triggerPuzzleCompletion({ leaderboard, totalPieces }) {
   currentState = SCREEN_STATE.COMPLETE;
+  // Champion Display
+const winnerBox = document.getElementById('winnerDisplay');
+
+if (winnerBox && leaderboard && leaderboard.length > 0) {
+  winnerBox.innerHTML = `
+    🏆 CHAMPION<br>
+    ${leaderboard[0].displayName.toUpperCase()}<br>
+    ⭐ ${leaderboard[0].score} POINTS
+  `;
+}
   Sound.playComplete();
 
   // Calculate solving time
@@ -505,6 +522,35 @@ function handleResize() {
     bgCanvas.height = window.innerHeight;
     initStars();
   }
+}
+
+function updateLiveLeaderboard(leaderboard) {
+
+  const list = document.getElementById('liveLeaderboardList');
+
+  if (!list) return;
+
+  list.innerHTML = '';
+
+  leaderboard.forEach((player, index) => {
+
+    const medal =
+      index === 0 ? '🥇' :
+      index === 1 ? '🥈' :
+      index === 2 ? '🥉' :
+      `${index + 1}.`;
+
+    list.innerHTML += `
+      <div style="
+        margin:8px 0;
+        font-size:18px;
+        color:${player.color};
+      ">
+        ${medal} ${player.displayName}
+        - ${player.score}
+      </div>
+    `;
+  });
 }
 
 window.addEventListener('DOMContentLoaded', () => {
