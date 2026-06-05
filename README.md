@@ -87,6 +87,22 @@ flowchart TD
 ```
 
 ---
+## CrowdGame - Assignment Submission
+## features Added
+## 1. Champion Announcement
+Added a dedicated Champion display on the completion screen.
+Shows the top player and their final score prominently.
+## 2. Leaderboard Improvements
+Added leaderboard display on the mobile completion screen.
+Added leaderboard display on the demo/big-screen completion screen.
+Added live leaderboard updates on the demo page during gameplay.
+## 3. Admin Winner Announcement
+Added winner announcement functionality on the admin panel.
+Displays the winning player after puzzle completion.
+## 4. UI/UX Enhancements
+Improved completion screen experience.
+Added player contribution visibility.
+Added score and rank display.
 
 ## 🚀 Quick Start (Development)
 
